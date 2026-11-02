@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#211d3e">
+  <title>Labelwise · Food Label Review</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+      font-size: 15px;
+      line-height: 1.55;
+      color: #211d3e;
+      background: #f5f3fa;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+      --ink: #211d3e;
+      --muted: #6d6a80;
+      --line: #e3dfed;
+      --green: #5946b2;
+      --green-dark: #43348d;
+      --green-pale: #f0edfb;
+      --amber: #875d16;
+      --amber-pale: #fff7e8;
+      --red: #a5444c;
+      --red-pale: #fff0f1;
+      --surface: #fff;
+      --shadow: 0 16px 44px rgb(42 31 87 / 8%);
+    }
+    * { box-sizing: border-box; }
+    body { min-width: 320px; margin: 0; background: #f5f3fa; }
+    body::before { position: absolute; z-index: 0; top: 0; right: 0; left: 0; height: 342px; background: radial-gradient(ellipse at 82% -35%, #554687 0, transparent 47%), linear-gradient(112deg, #211d3e 0%, #302958 100%); content: ""; }
+    button, input, textarea, select { font: inherit; }
+    button { cursor: pointer; }
+    .page-shell { position: relative; z-index: 1; width: min(1300px, calc(100% - 48px)); margin: 0 auto; padding: 27px 0 52px; }
+    .masthead { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-bottom: 30px; }
+    .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+    .brand-mark { display: grid; width: 42px; height: 42px; place-items: center; border-radius: 13px; color: white; background: #ef786d; box-shadow: 0 5px 16px rgb(239 120 109 / 27%); }
+    .brand-mark svg { width: 23px; height: 23px; }
+    .brand-name { color: white; font-size: 15px; font-weight: 750; letter-spacing: -.02em; }
+    .brand-caption { color: #c9c4dc; font-size: 12px; }
+    .workspace-tag { display: inline-flex; align-items: center; gap: 8px; padding: 7px 11px; border: 1px solid rgb(255 255 255 / 21%); border-radius: 999px; color: #e9e6f4; background: rgb(255 255 255 / 7%); font-size: 12px; font-weight: 650; white-space: nowrap; }
+    .workspace-dot { width: 7px; height: 7px; border-radius: 50%; background: #71d5b2; box-shadow: 0 0 0 3px rgb(113 213 178 / 15%); }
+    .intro { max-width: 720px; margin-bottom: 25px; }
+    .eyebrow { margin: 0 0 8px; color: #b8aaff; font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { margin-bottom: 8px; color: white; font-size: clamp(31px, 4vw, 42px); line-height: 1.12; letter-spacing: -.045em; font-weight: 760; }
+    .intro-copy { max-width: 650px; margin: 0; color: #d0cce0; font-size: 15px; }
+    .notice { display: flex; align-items: flex-start; gap: 11px; margin: 22px 0 26px; padding: 13px 16px; border: 1px solid #ead7ab; border-radius: 12px; color: #684b1d; background: var(--amber-pale); font-size: 13px; }
+    .notice svg { flex: 0 0 18px; width: 18px; height: 18px; margin-top: 1px; }
+    .notice strong { color: #533b16; }
+    .workspace { display: grid; grid-template-columns: minmax(340px, 390px) minmax(0, 1fr); align-items: start; gap: 20px; }
+    .panel { min-width: 0; border: 1px solid #e7e3ef; border-radius: 15px; background: var(--surface); box-shadow: var(--shadow); }
+    .panel-head { padding: 19px 21px 16px; border-bottom: 1px solid #efedf4; }
+    .panel-head h2 { margin: 0 0 3px; font-size: 17px; letter-spacing: -.025em; }
+    .panel-head p { margin: 0; color: var(--muted); font-size: 12px; }
+    .form-body { padding: 5px 21px 21px; }
+    .field { margin-top: 15px; }
+    .field-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 13px; }
+    label { display: block; margin-bottom: 6px; color: #344943; font-size: 12px; font-weight: 700; }
+    input, textarea, select { width: 100%; min-height: 42px; padding: 9px 11px; border: 1px solid #d7d3e2; border-radius: 8px; outline: none; color: var(--ink); background: #fff; transition: border-color .16s ease, box-shadow .16s ease; }
+    textarea { min-height: 105px; resize: vertical; }
+    input:focus, textarea:focus, select:focus { border-color: #806ed0; box-shadow: 0 0 0 3px rgb(89 70 178 / 13%); }
+    input::placeholder, textarea::placeholder { color: #95a49f; }
+    .field-hint { margin: 5px 0 0; color: #788782; font-size: 11px; }
+    .primary-button { display: inline-flex; min-height: 43px; align-items: center; justify-content: center; gap: 9px; width: 100%; margin-top: 20px; padding: 10px 15px; border: 0; border-radius: 9px; color: white; background: var(--green); font-size: 13px; font-weight: 720; transition: background .16s ease, transform .16s ease; }
+    .primary-button:hover:not(:disabled) { background: var(--green-dark); transform: translateY(-1px); }
+    .primary-button:disabled { opacity: .65; cursor: wait; }
+    .primary-button svg { width: 17px; height: 17px; }
+    .status-line { min-height: 20px; margin: 9px 0 0; color: var(--muted); font-size: 12px; }
+    .status-line[data-state="error"] { color: var(--red); }
+    .result-panel { overflow: hidden; }
+    .result-panel[hidden] { display: none; }
+    .empty-state { display: grid; min-height: 300px; align-content: center; justify-items: center; padding: 35px; text-align: center; }
+    .empty-icon { display: grid; width: 54px; height: 54px; place-items: center; margin-bottom: 15px; border-radius: 16px; color: var(--green); background: var(--green-pale); }
+    .empty-icon svg { width: 26px; height: 26px; }
+    .empty-state h2 { margin-bottom: 5px; font-size: 16px; }
+    .empty-state p { max-width: 280px; margin: 0; color: var(--muted); font-size: 13px; }
+    .result-content { padding: 22px 23px 24px; }
+    .result-topline { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
+    .result-topline h2 { margin: 0 0 3px; font-size: 19px; letter-spacing: -.03em; }
+    .result-subtitle { margin: 0; color: var(--muted); font-size: 12px; }
+    .route-badge, .status-badge { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 6px; padding: 6px 9px; border: 1px solid #c9e3d7; border-radius: 999px; color: #245d49; background: #f0f8f4; font-size: 10px; font-weight: 780; letter-spacing: .025em; text-transform: uppercase; }
+    .route-badge svg { width: 13px; height: 13px; }
+    .summary-box { margin-bottom: 20px; padding: 14px 15px; border: 1px solid #e1dcf1; border-radius: 11px; background: #f8f6fd; }
+    .summary-label { margin: 0 0 8px; color: #655a8d; font-size: 10px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+    .claim-chips { display: flex; flex-wrap: wrap; gap: 7px; }
+    .claim-chip { padding: 5px 9px; border: 1px solid #e2def0; border-radius: 7px; color: #4a3d86; background: white; font-size: 12px; font-weight: 650; }
+    .claim-none { margin: 0; color: var(--muted); font-size: 12px; }
+    .section-title { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0 0 10px; font-size: 13px; font-weight: 760; }
+    .finding-list { display: grid; gap: 11px; }
+    .finding-card { padding: 15px; border: 1px solid var(--line); border-radius: 11px; background: #fff; }
+    .finding-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+    .finding-title { margin: 0; font-size: 14px; line-height: 1.4; font-weight: 730; }
+    .finding-id { display: block; margin-bottom: 3px; color: #73837e; font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+    .status-badge { padding: 5px 8px; border-color: #eadbb8; color: var(--amber); background: var(--amber-pale); white-space: nowrap; }
+    .status-badge[data-status="insufficient_evidence"] { border-color: #eadbb8; color: var(--amber); background: var(--amber-pale); }
+    .status-badge[data-status="potential_issue"] { border-color: #f0d0ca; color: var(--red); background: var(--red-pale); }
+    .status-badge[data-status="no_issue_identified"] { border-color: #c9e3d7; color: #245d49; background: #f0f8f4; }
+    .finding-copy { margin: 0; color: #40534d; font-size: 13px; line-height: 1.6; }
+    .uncertainty { display: grid; grid-template-columns: 94px minmax(0, 1fr); gap: 7px; margin-top: 11px; padding-top: 10px; border-top: 1px solid #edf1ef; color: var(--muted); font-size: 11px; line-height: 1.55; }
+    .uncertainty strong { color: #52655f; font-weight: 730; }
+    .evidence-panel { margin-top: 12px; border: 1px solid #e5e1ef; border-radius: 9px; background: #faf9fd; }
+    .evidence-panel > summary { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 11px; color: #4e4380; font-size: 11px; font-weight: 740; cursor: pointer; list-style: none; }
+    .evidence-panel > summary::-webkit-details-marker { display: none; }
+    .evidence-panel > summary::after { content: "+"; color: var(--green); font-size: 17px; line-height: 1; }
+    .evidence-panel[open] > summary::after { content: "−"; }
+    .evidence-content { padding: 0 10px 10px; }
+    .evidence-group + .evidence-group { margin-top: 10px; }
+    .evidence-group-title { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 0 0 6px; color: #536a61; font-size: 10px; font-weight: 800; letter-spacing: .045em; text-transform: uppercase; }
+    .source-list { display: grid; gap: 6px; }
+    .source-card { padding: 9px 10px; border: 1px solid #e5ece8; border-radius: 8px; background: white; }
+    .source-card summary { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; color: #344a43; font-size: 11px; font-weight: 690; cursor: pointer; list-style: none; }
+    .source-card summary::-webkit-details-marker { display: none; }
+    .source-name { overflow-wrap: anywhere; }
+    .page-tag { flex: 0 0 auto; padding: 2px 6px; border-radius: 5px; color: #597068; background: #eef4f0; font-size: 9px; font-weight: 720; }
+    .source-path { margin: 4px 0 0; color: #87958f; font-size: 10px; overflow-wrap: anywhere; }
+    .source-excerpt { margin: 9px 0 0; padding-top: 8px; border-top: 1px solid #edf1ef; color: #52635d; font-size: 11px; line-height: 1.55; white-space: pre-wrap; }
+    .review-questions { margin-top: 18px; padding: 14px 15px; border: 1px solid #eadbb8; border-radius: 11px; background: #fffbf2; }
+    .review-questions h3 { margin: 0 0 7px; color: #634b24; font-size: 12px; }
+    .review-questions ul { display: grid; gap: 5px; margin: 0; padding-left: 18px; color: #6e6046; font-size: 11px; }
+    .feedback-box { margin-top: 19px; padding-top: 16px; border-top: 1px solid #e8eeeb; }
+    .feedback-box h3 { margin: 0 0 3px; font-size: 12px; }
+    .feedback-box > p { margin: 0 0 11px; color: var(--muted); font-size: 11px; }
+    .feedback-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .secondary-button { min-height: 35px; padding: 7px 11px; border: 1px solid #cbd9d3; border-radius: 7px; color: #34574b; background: white; font-size: 11px; font-weight: 700; }
+    .secondary-button:hover { border-color: #79a995; background: #f5faf7; }
+    .secondary-button.primary-choice { border-color: var(--green); color: white; background: var(--green); }
+    .secondary-button:disabled { opacity: .6; cursor: wait; }
+    .feedback-form { margin-top: 12px; padding: 12px; border: 1px solid #e1e9e5; border-radius: 9px; background: #fafcfb; }
+    .feedback-form textarea { min-height: 76px; font-size: 12px; }
+    .feedback-form-actions { display: flex; gap: 8px; margin-top: 8px; }
+    .feedback-message { min-height: 17px; margin: 9px 0 0; color: #39725b; font-size: 11px; }
+    .feedback-message[data-state="error"] { color: var(--red); }
+    .footer { margin-top: 25px; color: #7c8b86; font-size: 11px; text-align: center; }
+    @media (max-width: 850px) {
+      .page-shell { width: min(700px, calc(100% - 30px)); padding-top: 24px; }
+      body::before { height: 390px; }
+      .workspace { grid-template-columns: 1fr; }
+      .result-panel { min-height: 180px; }
+      .empty-state { min-height: 220px; }
+    }
+    @media (max-width: 520px) {
+      .page-shell { width: calc(100% - 22px); padding-top: 17px; }
+      body::before { height: 425px; }
+      .masthead { margin-bottom: 23px; }
+      .workspace-tag { padding: 6px 8px; font-size: 10px; }
+      .field-row { grid-template-columns: 1fr; gap: 0; }
+      .panel-head, .form-body, .result-content { padding-right: 16px; padding-left: 16px; }
+      .result-topline { flex-direction: column; }
+      .uncertainty { grid-template-columns: 1fr; gap: 2px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+    <header class="masthead">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 3.5c-4.7 0-8 3.5-8 8.1 0 4.2 2.7 7.2 6.8 7.2 2.7 0 4.6-1.5 5.5-4.1M12 3.5c4.7 0 8 3.5 8 8.1 0 1.2-.2 2.3-.6 3.2M12 3.5v6.2m0 0c-2.5-2.2-5.2-2.3-7.5-1.3m7.5 1.3c2.2-2.3 4.8-2.6 7-1.7m-9.1 5.1c-1.4-.4-2.6-.3-3.6.2m6.6-.4c1.3-.6 2.5-.8 3.7-.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span><span class="brand-name">Labelwise</span><br><span class="brand-caption">Food label review workspace</span></span>
+      </div>
+      <span class="workspace-tag"><span class="workspace-dot"></span> Local review workspace</span>
+    </header>
+
+    <section class="intro" aria-labelledby="page-title">
+      <p class="eyebrow">Evidence retrieval</p>
+      <h1 id="page-title">Review a food label</h1>
+      <p class="intro-copy">Check label claims against retrieved regulatory passages and give your team a clear path for professional review.</p>
+    </section>
+
+    <aside class="notice" role="note">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 8v5m0 3.5h.01M10.3 4.8 2.9 17.6a1.8 1.8 0 0 0 1.6 2.7h15a1.8 1.8 0 0 0 1.6-2.7L13.7 4.8a2 2 0 0 0-3.4 0Z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div><strong>Professional review is required.</strong> Results show candidate evidence only. Verify the current Gazette text, amendments, and effective dates before making a regulatory decision.</div>
+    </aside>
+
+    <div class="workspace">
+      <section class="panel" aria-labelledby="form-title">
+        <header class="panel-head">
+          <h2 id="form-title">Product details</h2>
+          <p>Enter the information shown on the package.</p>
+        </header>
+        <form id="review-form" class="form-body">
+          <div class="field-row">
+            <div class="field"><label for="product">Product name</label><input id="product" value="Jackfruit Chips" required minlength="2" maxlength="200" autocomplete="off"></div>
+            <div class="field"><label for="category">Product category</label><input id="category" value="Packaged snack" required minlength="2" maxlength="100" autocomplete="off"></div>
+          </div>
+          <div class="field"><label for="label">Label text</label><textarea id="label" required minlength="10" maxlength="20000">Jackfruit Chips. Ingredients: jackfruit, oil, salt. Source of protein.</textarea><p class="field-hint">Include claims and other visible label wording.</p></div>
+          <div class="field-row">
+            <div class="field"><label for="ingredients">Ingredients</label><input id="ingredients" value="jackfruit, oil, salt" required autocomplete="off"><p class="field-hint">Separate items with commas.</p></div>
+            <div class="field"><label for="allergens">Declared allergens</label><input id="allergens" value="" autocomplete="off" placeholder="For example: peanuts, milk"></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label for="protein">Protein (g per 100 g)</label><input id="protein" type="number" min="0" max="1000" step="any" value="5"></div>
+            <div class="field"><label for="energy">Energy (kcal per 100 g)</label><input id="energy" type="number" min="0" max="10000" step="any" value="450"></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label for="quantity">Net quantity</label><input id="quantity" type="number" min="0.01" max="100000" value="100" step="any" required></div>
+            <div class="field"><label for="unit">Quantity unit</label><select id="unit"><option value="g" selected>g</option><option value="kg">kg</option><option value="ml">ml</option><option value="l">l</option></select></div>
+          </div>
+          <button id="submit" class="primary-button" type="submit">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Start evidence review</span>
+          </button>
+          <p id="status" class="status-line" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section id="result" class="panel result-panel" aria-label="Review results" aria-live="polite">
+        <div class="empty-state">
+          <span class="empty-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M7 3.8h7l4.2 4.3v11.1a1.8 1.8 0 0 1-1.8 1.8H7a1.8 1.8 0 0 1-1.8-1.8V5.6A1.8 1.8 0 0 1 7 3.8Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M13.5 4v4.5H18M8.5 13h7m-7 3.5h7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+          <h2>Your review will appear here</h2>
+          <p>Submit product details to see detected claims, evidence, and points to confirm with a reviewer.</p>
+        </div>
+      </section>
+    </div>
+    <footer class="footer">Evidence retrieval supports review; it does not determine whether a label is compliant.</footer>
+  </main>
+
+<script>
+const form = document.querySelector('#review-form');
+const button = document.querySelector('#submit');
+const buttonLabel = button.querySelector('span');
+const statusNode = document.querySelector('#status');
+const resultNode = document.querySelector('#result');
+const list = value => value.split(',').map(item => item.trim()).filter(Boolean);
+const number = id => {
+  const value = document.querySelector(id).value;
+  return value === '' ? null : Number(value);
+};
+
+function element(tag, text, className) {
+  const node = document.createElement(tag);
+  if (text !== undefined && text !== null) node.textContent = text;
+  if (className) node.className = className;
+  return node;
+}
+
+function setStatus(message, state = '') {
+  statusNode.textContent = message;
+  statusNode.dataset.state = state;
+}
+
+async function poll(url) {
+  for (let attempt = 0; attempt < 180; attempt++) {
+    const response = await fetch(url);
+    const run = await response.json();
+    if (!response.ok) throw new Error(typeof run.detail === 'string' ? run.detail : JSON.stringify(run.detail || run));
+    setStatus(`Review ${run.status}…`);
+    if (run.status === 'succeeded') return run;
+    if (run.status === 'failed') throw new Error(run.error?.message || 'Review failed.');
+    await new Promise(resolve => setTimeout(resolve, 1000));
+  }
+  throw new Error('This review is taking longer than expected. Use the API to check its status.');
+}
+
+function statusLabel(value) {
+  return ({
+    review_required: 'Professional review',
+    insufficient_evidence: 'Evidence needed',
+    potential_issue: 'Potential issue',
+    no_issue_identified: 'No issue identified'
+  })[value] || 'Review finding';
+}
+
+function buildEvidence(citations) {
+  const panel = document.createElement('details');
+  panel.className = 'evidence-panel';
+  const summary = element('summary', `Evidence citations · ${citations.length}`);
+  panel.append(summary);
+  const content = element('div', undefined, 'evidence-content');
+  const groups = new Map();
+  for (const citation of citations) {
+    const key = citation.category || 'Other sources';
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(citation);
+  }
+  const groupNames = {
+    advertising_claims: 'Advertising & claims',
+    labelling_display: 'Labelling & display'
+  };
+  for (const [category, items] of groups) {
+    const group = element('section', undefined, 'evidence-group');
+    const heading = element('h4', undefined, 'evidence-group-title');
+    heading.append(element('span', groupNames[category] || category.replaceAll('_', ' ')));
+    heading.append(element('span', `${items.length} ${items.length === 1 ? 'source' : 'sources'}`));
+    group.append(heading);
+    const sources = element('div', undefined, 'source-list');
+    for (const citation of items) {
+      const source = document.createElement('details');
+      source.className = 'source-card';
+      const sourceName = (citation.source_file || 'Source document').split('/').pop();
+      const sourceSummary = element('summary');
+      sourceSummary.append(element('span', sourceName, 'source-name'));
+      sourceSummary.append(element('span', `PDF page ${citation.page ?? '—'}`, 'page-tag'));
+      source.append(sourceSummary);
+      source.append(element('p', citation.source_file || 'Source path unavailable', 'source-path'));
+      source.append(element('p', citation.excerpt || 'No excerpt was provided.', 'source-excerpt'));
+      sources.append(source);
+    }
+    group.append(sources);
+    content.append(group);
+  }
+  panel.append(content);
+  return panel;
+}
+
+async function sendFeedback(runId, rating, reason, feedbackMessage, feedbackButtons) {
+  feedbackButtons.forEach(item => item.disabled = true);
+  feedbackMessage.dataset.state = '';
+  feedbackMessage.textContent = 'Saving feedback…';
+  try {
+    const response = await fetch('/api/v1/feedback', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({run_id: runId, rating, reason})
+    });
+    const payload = await response.json();
+    if (!response.ok) throw new Error(payload.detail || 'Could not save feedback.');
+    feedbackMessage.textContent = 'Thank you. Your feedback has been saved.';
+    feedbackButtons.forEach(item => item.hidden = true);
+  } catch (error) {
+    feedbackMessage.textContent = error.message;
+    feedbackMessage.dataset.state = 'error';
+    feedbackButtons.forEach(item => item.disabled = false);
+  }
+}
+
+function buildFeedback(runId) {
+  const box = element('section', undefined, 'feedback-box');
+  box.append(element('h3', 'Was this review useful?'));
+  box.append(element('p', 'Your feedback helps improve the review experience.'));
+  const actions = element('div', undefined, 'feedback-actions');
+  const yes = element('button', 'Yes, it was useful', 'secondary-button primary-choice');
+  yes.type = 'button';
+  const needsWork = element('button', 'Needs improvement', 'secondary-button');
+  needsWork.type = 'button';
+  actions.append(yes, needsWork);
+  box.append(actions);
+  const message = element('p', '', 'feedback-message');
+  message.setAttribute('role', 'status');
+  message.setAttribute('aria-live', 'polite');
+  box.append(message);
+  const buttons = [yes, needsWork];
+  yes.addEventListener('click', () => sendFeedback(runId, 'satisfactory', '', message, buttons));
+  needsWork.addEventListener('click', () => {
+    if (box.querySelector('.feedback-form')) return;
+    const feedbackForm = element('form', undefined, 'feedback-form');
+    const reasonId = `feedback-reason-${runId}`;
+    const label = element('label', 'What could be improved? (optional)');
+    label.htmlFor = reasonId;
+    const reason = element('textarea');
+    reason.id = reasonId;
+    reason.maxLength = 2000;
+    reason.placeholder = 'Share a detail if you’d like…';
+    const formActions = element('div', undefined, 'feedback-form-actions');
+    const send = element('button', 'Send feedback', 'secondary-button primary-choice');
+    send.type = 'submit';
+    const cancel = element('button', 'Cancel', 'secondary-button');
+    cancel.type = 'button';
+    formActions.append(send, cancel);
+    feedbackForm.append(label, reason, formActions);
+    box.insertBefore(feedbackForm, message);
+    reason.focus();
+    cancel.addEventListener('click', () => feedbackForm.remove());
+    feedbackForm.addEventListener('submit', event => {
+      event.preventDefault();
+      sendFeedback(runId, 'unsatisfactory', reason.value.trim(), message, buttons);
+    });
+  });
+  return box;
+}
+
+function showReport(run) {
+  const report = run.report;
+  resultNode.replaceChildren();
+  const content = element('div', undefined, 'result-content');
+
+  const top = element('div', undefined, 'result-topline');
+  const titleBlock = document.createElement('div');
+  titleBlock.append(element('h2', 'Review results'));
+  titleBlock.append(element('p', `Run ${run.run_id.slice(0, 8)} · completed`, 'result-subtitle'));
+  const route = element('span', undefined, 'route-badge');
+  route.append(element('span', '●'));
+  route.append(element('span', report.workflow_route.replaceAll('-', ' ')));
+  top.append(titleBlock, route);
+  content.append(top);
+
+  const summary = element('section', undefined, 'summary-box');
+  summary.append(element('p', 'Detected claims', 'summary-label'));
+  if (report.detected_claims?.length) {
+    const chips = element('div', undefined, 'claim-chips');
+    report.detected_claims.forEach(claim => chips.append(element('span', claim, 'claim-chip')));
+    summary.append(chips);
+  } else {
+    summary.append(element('p', 'No supported claim phrases were recognized in the label text.', 'claim-none'));
+  }
+  content.append(summary);
+
+  const findings = report.findings || [];
+  content.append(element('h3', `Findings · ${findings.length}`, 'section-title'));
+  const findingList = element('div', undefined, 'finding-list');
+  if (!findings.length) {
+    const emptyFinding = element('article', undefined, 'finding-card');
+    emptyFinding.append(element('p', 'No specific finding was generated. Review the label and source material with a regulatory professional.', 'finding-copy'));
+    findingList.append(emptyFinding);
+  }
+  findings.forEach((finding, index) => {
+    const card = element('article', undefined, 'finding-card');
+    const heading = element('div', undefined, 'finding-heading');
+    const title = document.createElement('div');
+    title.append(element('span', finding.finding_id || `Finding ${index + 1}`, 'finding-id'));
+    title.append(element('h4', finding.requirement || 'Label review finding', 'finding-title'));
+    const badge = element('span', statusLabel(finding.status), 'status-badge');
+    badge.dataset.status = finding.status || '';
+    heading.append(title, badge);
+    card.append(heading);
+    card.append(element('p', finding.explanation || 'No explanation was provided.', 'finding-copy'));
+    if (finding.uncertainty) {
+      const uncertainty = element('div', undefined, 'uncertainty');
+      uncertainty.append(element('strong', 'To confirm'));
+      uncertainty.append(element('span', finding.uncertainty));
+      card.append(uncertainty);
+    }
+    const citations = finding.citations || [];
+    if (citations.length) card.append(buildEvidence(citations));
+    card.append(element('p', finding.severity && finding.severity !== 'unknown' ? `Severity: ${finding.severity}` : '', 'field-hint'));
+    findingList.append(card);
+  });
+  content.append(findingList);
+
+  const questions = report.unresolved_questions || [];
+  if (questions.length) {
+    const review = element('section', undefined, 'review-questions');
+    review.append(element('h3', 'Points for professional review'));
+    const items = document.createElement('ul');
+    questions.forEach(question => items.append(element('li', question)));
+    review.append(items);
+    content.append(review);
+  }
+
+  const notice = element('p', report.notice, 'field-hint');
+  notice.style.marginTop = '14px';
+  content.append(notice);
+  content.append(buildFeedback(run.run_id));
+  resultNode.append(content);
+}
+
+form.addEventListener('submit', async event => {
+  event.preventDefault();
+  button.disabled = true;
+  buttonLabel.textContent = 'Review in progress…';
+  setStatus('Submitting product details…');
+  resultNode.replaceChildren();
+  const loading = element('div', undefined, 'empty-state');
+  const loadingIcon = element('span', '…', 'empty-icon');
+  loading.append(loadingIcon, element('h2', 'Gathering evidence'));
+  loading.append(element('p', 'The review worker is searching the regulation corpus and checking source citations.'));
+  resultNode.append(loading);
+
+  const payload = {
+    product_name: document.querySelector('#product').value,
+    product_category: document.querySelector('#category').value,
+    label_text: document.querySelector('#label').value,
+    ingredients: list(document.querySelector('#ingredients').value),
+    declared_allergens: list(document.querySelector('#allergens').value),
+    nutrition: {basis: 'per_100g', energy_kcal: number('#energy'), protein_g: number('#protein')},
+    package: {net_quantity: number('#quantity'), net_quantity_unit: document.querySelector('#unit').value, is_single_ingredient_food: false}
+  };
+  try {
+    const response = await fetch('/api/v1/reviews', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload)
+    });
+    const submitted = await response.json();
+    if (!response.ok) {
+      const detail = submitted.detail;
+      const message = Array.isArray(detail) ? detail.map(item => `${item.loc?.slice(-1)[0] || 'field'}: ${item.msg}`).join('\n') : (detail || submitted.message || JSON.stringify(submitted));
+      throw new Error(message);
+    }
+    setStatus(`Review queued · ${submitted.run_id.slice(0, 8)}`);
+    showReport(await poll(submitted.poll_url));
+    setStatus('Review complete. Professional review is required.');
+  } catch (error) {
+    resultNode.replaceChildren();
+    const failure = element('div', undefined, 'empty-state');
+    failure.append(element('h2', 'Review could not be completed'));
+    failure.append(element('p', error.message, 'error'));
+    resultNode.append(failure);
+    setStatus('There was a problem completing the review.', 'error');
+  } finally {
+    button.disabled = false;
+    buttonLabel.textContent = 'Start evidence review';
+  }
+});
+</script>
+</body>
+</html>
