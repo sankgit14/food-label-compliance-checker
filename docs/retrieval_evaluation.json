@@ -1,0 +1,276 @@
+{
+  "case_count": 5,
+  "search_count": 6,
+  "strategy": "family-filtered",
+  "top_k": 5,
+  "corpus": {
+    "chunks_sha256": "7e67526279c96b4acd35372e10c3e405d95a8ae7971eedab63850e194d14a3cb",
+    "built_at_utc": "2026-10-29T18:02:50.158084+00:00"
+  },
+  "evidence_recall_at_k": 1.0,
+  "mean_reciprocal_rank": 0.4583,
+  "mrr_unit": "expected source/page evidence item",
+  "cases": [
+    {
+      "case_id": "nutrition-declaration",
+      "expected_outcome": "Retrieve the nutrition declaration provision; do not infer label compliance from retrieval alone.",
+      "curation_status": "source_and_page_curated; amendment applicability still requires legal review",
+      "expected_count": 1,
+      "hit_count": 1,
+      "mean_evidence_reciprocal_rank": 0.3333,
+      "searches": [
+        {
+          "category": "labelling_display",
+          "query": "nutritional information energy value amounts protein carbohydrate total sugars declaration shall label",
+          "expected_count": 1,
+          "hit_count": 1,
+          "reciprocal_rank": 0.3333,
+          "expected_evidence": [
+            {
+              "source_file": "labelling_display/archive/5fd87c6a0f6adGazette_Notification_Labelling_Display_14_12_2020.pdf",
+              "page": 32
+            }
+          ],
+          "returned_evidence": [
+            {
+              "source_file": "labelling_display/archive/Compendium_Labelling_Display_23_09_2021.pdf",
+              "page": 10
+            },
+            {
+              "source_file": "labelling_display/active_reference/Comp_Labelling Display_Version VIII_09_09_2025.pdf",
+              "page": 10
+            },
+            {
+              "source_file": "labelling_display/archive/5fd87c6a0f6adGazette_Notification_Labelling_Display_14_12_2020.pdf",
+              "page": 32
+            },
+            {
+              "source_file": "labelling_display/active_reference/Comp_Labelling Display_Version VIII_09_09_2025.pdf",
+              "page": 10
+            },
+            {
+              "source_file": "labelling_display/archive/5fd87c6a0f6adGazette_Notification_Labelling_Display_14_12_2020.pdf",
+              "page": 32
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "ingredient-list",
+      "expected_outcome": "Retrieve the ingredient-list provision; ingredient compliance is outside the current deterministic rules.",
+      "curation_status": "source_and_page_curated; amendment applicability still requires legal review",
+      "expected_count": 1,
+      "hit_count": 1,
+      "mean_evidence_reciprocal_rank": 0.25,
+      "searches": [
+        {
+          "category": "labelling_display",
+          "query": "list of ingredients appropriate title declared descending order proportion label",
+          "expected_count": 1,
+          "hit_count": 1,
+          "reciprocal_rank": 0.25,
+          "expected_evidence": [
+            {
+              "source_file": "labelling_display/archive/5fd87c6a0f6adGazette_Notification_Labelling_Display_14_12_2020.pdf",
+              "page": 30
+            }
+          ],
+          "returned_evidence": [
+            {
+              "source_file": "labelling_display/active_reference/Comp_Labelling Display_Version VIII_09_09_2025.pdf",
+              "page": 25
+            },
+            {
+              "source_file": "labelling_display/active_reference/Comp_Labelling Display_Version VIII_09_09_2025.pdf",
+              "page": 5
+            },
+            {
+              "source_file": "labelling_display/archive/Compendium_Labelling_Display_23_09_2021.pdf",
+              "page": 5
+            },
+            {
+              "source_file": "labelling_display/archive/5fd87c6a0f6adGazette_Notification_Labelling_Display_14_12_2020.pdf",
+              "page": 30
+            },
+            {
+              "source_file": "labelling_display/active_reference/Comp_Labelling Display_Version VIII_09_09_2025.pdf",
+              "page": 8
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "allergen-declaration",
+      "expected_outcome": "Retrieve the allergen declaration provision; missing allergen cross-contact evidence must be escalated.",
+      "curation_status": "source_and_page_curated; amendment applicability still requires legal review",
+      "expected_count": 1,
+      "hit_count": 1,
+      "mean_evidence_reciprocal_rank": 1.0,
+      "searches": [
+        {
+          "category": "labelling_display",
+          "query": "allergen declaration contains wheat gluten soy sulphite declaration",
+          "expected_count": 1,
+          "hit_count": 1,
+          "reciprocal_rank": 1.0,
+          "expected_evidence": [
+            {
+              "source_file": "labelling_display/archive/5fd87c6a0f6adGazette_Notification_Labelling_Display_14_12_2020.pdf",
+              "page": 37
+            }
+          ],
+          "returned_evidence": [
+            {
+              "source_file": "labelling_display/archive/5fd87c6a0f6adGazette_Notification_Labelling_Display_14_12_2020.pdf",
+              "page": 37
+            },
+            {
+              "source_file": "labelling_display/active_reference/Comp_Labelling Display_Version VIII_09_09_2025.pdf",
+              "page": 18
+            },
+            {
+              "source_file": "labelling_display/archive/Compendium_Labelling_Display_23_09_2021.pdf",
+              "page": 19
+            },
+            {
+              "source_file": "labelling_display/active_reference/Comp_Labelling Display_Version VIII_09_09_2025.pdf",
+              "page": 18
+            },
+            {
+              "source_file": "labelling_display/archive/Compendium_Labelling_Display_23_09_2021.pdf",
+              "page": 19
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "vegetarian-mark",
+      "expected_outcome": "Retrieve the veg/non-veg declaration provision; do not infer the correct symbol from ingredients alone.",
+      "curation_status": "source_and_page_curated; amendment applicability still requires legal review",
+      "expected_count": 1,
+      "hit_count": 1,
+      "mean_evidence_reciprocal_rank": 0.3333,
+      "searches": [
+        {
+          "category": "labelling_display",
+          "query": "vegetarian non vegetarian symbol declaration colour",
+          "expected_count": 1,
+          "hit_count": 1,
+          "reciprocal_rank": 0.3333,
+          "expected_evidence": [
+            {
+              "source_file": "labelling_display/archive/5fd87c6a0f6adGazette_Notification_Labelling_Display_14_12_2020.pdf",
+              "page": 34
+            }
+          ],
+          "returned_evidence": [
+            {
+              "source_file": "labelling_display/active_reference/Comp_Labelling Display_Version VIII_09_09_2025.pdf",
+              "page": 13
+            },
+            {
+              "source_file": "labelling_display/archive/Compendium_Labelling_Display_23_09_2021.pdf",
+              "page": 14
+            },
+            {
+              "source_file": "labelling_display/archive/5fd87c6a0f6adGazette_Notification_Labelling_Display_14_12_2020.pdf",
+              "page": 34
+            },
+            {
+              "source_file": "labelling_display/archive/5fd87c6a0f6adGazette_Notification_Labelling_Display_14_12_2020.pdf",
+              "page": 34
+            },
+            {
+              "source_file": "labelling_display/active_reference/Comp_Labelling Display_Version VIII_09_09_2025.pdf",
+              "page": 13
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "protein-claim-cross-regulation",
+      "expected_outcome": "Retrieve both the claim condition and nutrition declaration provision. Compare the label value only after checking current RDA and applicability; always route unresolved applicability to a human.",
+      "curation_status": "source_and_page_curated; current RDA reference and amendment applicability require legal review",
+      "expected_count": 2,
+      "hit_count": 2,
+      "mean_evidence_reciprocal_rank": 0.4167,
+      "searches": [
+        {
+          "category": "advertising_claims",
+          "query": "source of protein schedule I claim conditions RDA per 100 g solids",
+          "expected_count": 1,
+          "hit_count": 1,
+          "reciprocal_rank": 0.5,
+          "expected_evidence": [
+            {
+              "source_file": "advertising_claims/active_reference/Gazette_Notification_Advertising_Claims_27_11_2018.pdf",
+              "page": 28
+            }
+          ],
+          "returned_evidence": [
+            {
+              "source_file": "advertising_claims/archive/Compendium_Advertising_Claims_Regulations_16_11_2021.pdf",
+              "page": 13
+            },
+            {
+              "source_file": "advertising_claims/active_reference/Gazette_Notification_Advertising_Claims_27_11_2018.pdf",
+              "page": 28
+            },
+            {
+              "source_file": "advertising_claims/archive/Compendium_Advertising_Claims_Regulations_16_11_2021.pdf",
+              "page": 10
+            },
+            {
+              "source_file": "advertising_claims/archive/Compendium_Advertising_Claims_Regulations_16_11_2021.pdf",
+              "page": 14
+            },
+            {
+              "source_file": "advertising_claims/archive/Compendium_Advertising_Claims_Regulations_16_11_2021.pdf",
+              "page": 11
+            }
+          ]
+        },
+        {
+          "category": "labelling_display",
+          "query": "nutritional information energy value amounts protein carbohydrate total sugars declaration shall label",
+          "expected_count": 1,
+          "hit_count": 1,
+          "reciprocal_rank": 0.3333,
+          "expected_evidence": [
+            {
+              "source_file": "labelling_display/archive/5fd87c6a0f6adGazette_Notification_Labelling_Display_14_12_2020.pdf",
+              "page": 32
+            }
+          ],
+          "returned_evidence": [
+            {
+              "source_file": "labelling_display/archive/Compendium_Labelling_Display_23_09_2021.pdf",
+              "page": 10
+            },
+            {
+              "source_file": "labelling_display/active_reference/Comp_Labelling Display_Version VIII_09_09_2025.pdf",
+              "page": 10
+            },
+            {
+              "source_file": "labelling_display/archive/5fd87c6a0f6adGazette_Notification_Labelling_Display_14_12_2020.pdf",
+              "page": 32
+            },
+            {
+              "source_file": "labelling_display/active_reference/Comp_Labelling Display_Version VIII_09_09_2025.pdf",
+              "page": 10
+            },
+            {
+              "source_file": "labelling_display/archive/5fd87c6a0f6adGazette_Notification_Labelling_Display_14_12_2020.pdf",
+              "page": 32
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "interpretation": "Retrieval metrics only. They do not verify legal applicability or answer correctness."
+}

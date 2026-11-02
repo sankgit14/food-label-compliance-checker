@@ -1,0 +1,133 @@
+services:
+  corpus-init:
+    build: .
+    command: ["python", "scripts/ingest_regulations.py"]
+    volumes:
+      - corpus-data:/app/data/processed
+    restart: "no"
+
+  api:
+    build: .
+    command: ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    environment:
+      MODEL_BACKEND: ${MODEL_BACKEND:-stub}
+      MODEL_BASE_URL: ${MODEL_BASE_URL:-}
+      MODEL_NAME: ${MODEL_NAME:-}
+      MODEL_API_KEY: ${MODEL_API_KEY:-}
+      REVIEW_DB_PATH: /app/data/state/review_runs.sqlite3
+      QUARANTINE_FILE: /app/data/quarantine/rejected_records.jsonl
+      OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: http://jaeger:4318/v1/traces
+      REVIEWS_PER_CLIENT_PER_MINUTE: ${REVIEWS_PER_CLIENT_PER_MINUTE:-20}
+    volumes:
+      - corpus-data:/app/data/processed:ro
+      - app-state:/app/data/state
+      - quarantine-data:/app/data/quarantine
+    ports:
+      - "8000:8000"
+    depends_on:
+      corpus-init:
+        condition: service_completed_successfully
+      jaeger:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/ready', timeout=3)"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  worker:
+    build: .
+    command: ["python", "-m", "app.worker"]
+    environment:
+      MODEL_BACKEND: ${MODEL_BACKEND:-stub}
+      MODEL_BASE_URL: ${MODEL_BASE_URL:-}
+      MODEL_NAME: ${MODEL_NAME:-}
+      MODEL_API_KEY: ${MODEL_API_KEY:-}
+      MODEL_TIMEOUT_SECONDS: ${MODEL_TIMEOUT_SECONDS:-30}
+      MODEL_MAX_RETRIES: ${MODEL_MAX_RETRIES:-2}
+      MODEL_BREAKER_THRESHOLD: ${MODEL_BREAKER_THRESHOLD:-3}
+      MODEL_BREAKER_RESET_SECONDS: ${MODEL_BREAKER_RESET_SECONDS:-30}
+      MODEL_INPUT_COST_PER_1M: ${MODEL_INPUT_COST_PER_1M:-}
+      MODEL_OUTPUT_COST_PER_1M: ${MODEL_OUTPUT_COST_PER_1M:-}
+      STUB_DELAY_SECONDS: ${STUB_DELAY_SECONDS:-0}
+      AGENT_MAX_STEPS: ${AGENT_MAX_STEPS:-20}
+      AGENT_MAX_TOOL_CALLS: ${AGENT_MAX_TOOL_CALLS:-32}
+      AGENT_MAX_RUN_SECONDS: ${AGENT_MAX_RUN_SECONDS:-120}
+      REVIEW_DB_PATH: /app/data/state/review_runs.sqlite3
+      WORKER_POLL_SECONDS: 1
+      OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: http://jaeger:4318/v1/traces
+      REVIEWS_PER_CLIENT_PER_MINUTE: ${REVIEWS_PER_CLIENT_PER_MINUTE:-20}
+    volumes:
+      - corpus-data:/app/data/processed:ro
+      - app-state:/app/data/state
+    depends_on:
+      corpus-init:
+        condition: service_completed_successfully
+      api:
+        condition: service_healthy
+      jaeger:
+        condition: service_started
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import os; os.kill(1, 0)"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  locust:
+    build: .
+    profiles: ["load"]
+    command: ["locust", "-f", "load/locustfile.py", "--host", "http://api:8000"]
+    depends_on:
+      api:
+        condition: service_healthy
+      worker:
+        condition: service_healthy
+
+  prometheus:
+    image: prom/prometheus:v3.5.0
+    command: ["--config.file=/etc/prometheus/prometheus.yml", "--storage.tsdb.path=/prometheus"]
+    volumes:
+      - ./deploy/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    ports:
+      - "9090:9090"
+    depends_on:
+      api:
+        condition: service_healthy
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.68.0
+    environment:
+      COLLECTOR_OTLP_ENABLED: "true"
+    ports:
+      - "16686:16686"
+      - "4318:4318"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:14269/" ]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  grafana:
+    image: grafana/grafana:12.1.0
+    environment:
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./deploy/grafana/provisioning:/etc/grafana/provisioning:ro
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+
+volumes:
+  corpus-data:
+  app-state:
+  quarantine-data:
+  prometheus-data:
+  grafana-data:

@@ -1,0 +1,66 @@
+{
+  "title": "Food Label Checker Overview",
+  "uid": "food-label-overview",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "15s",
+  "panels": [
+    {
+      "id": 1,
+      "title": "Review runs by state",
+      "type": "timeseries",
+      "gridPos": {"h": 9, "w": 12, "x": 0, "y": 0},
+      "targets": [{"expr": "food_label_review_runs", "legendFormat": "{{state}}", "refId": "A"}]
+    },
+    {
+      "id": 2,
+      "title": "Corpus availability",
+      "type": "stat",
+      "gridPos": {"h": 9, "w": 6, "x": 12, "y": 0},
+      "targets": [{"expr": "food_label_corpus_available", "refId": "A"}],
+      "options": {"colorMode": "value", "graphMode": "none", "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}}
+    },
+    {
+      "id": 3,
+      "title": "Indexed text chunks",
+      "type": "stat",
+      "gridPos": {"h": 9, "w": 6, "x": 18, "y": 0},
+      "targets": [{"expr": "food_label_corpus_chunks", "refId": "A"}],
+      "options": {"colorMode": "value", "graphMode": "none", "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}}
+    },
+    {
+      "id": 4,
+      "title": "Complete review p95 latency (seconds)",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 9},
+      "targets": [{"expr": "food_label_review_end_to_end_latency_seconds{quantile=\"0.95\"}", "legendFormat": "p95", "refId": "A"}]
+    },
+    {
+      "id": 5,
+      "title": "Completed runs in last five minutes",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 9},
+      "targets": [{"expr": "food_label_review_throughput_runs_5m", "legendFormat": "runs / 5m", "refId": "A"}]
+    },
+    {
+      "id": 6,
+      "title": "Agent success and model calls",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 17},
+      "targets": [
+        {"expr": "food_label_agent_success_total", "legendFormat": "{{agent}} success", "refId": "A"},
+        {"expr": "food_label_agent_model_calls_total", "legendFormat": "{{agent}} model calls", "refId": "B"}
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Corpus freshness and ingestion throughput",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 17},
+      "targets": [
+        {"expr": "food_label_index_pages_per_second", "legendFormat": "pages/s", "refId": "A"},
+        {"expr": "food_label_index_chunks_per_second", "legendFormat": "chunks/s", "refId": "B"}
+      ]
+    }
+  ]
+}
